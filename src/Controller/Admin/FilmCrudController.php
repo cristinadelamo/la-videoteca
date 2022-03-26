@@ -21,6 +21,7 @@ class FilmCrudController extends AbstractCrudController
     {
         yield IdField::new('id')
             ->onlyOnIndex();
+        yield TextField::new('imdbtitleid','IMDb Title ID');
         yield TextField::new('title');
         yield DateField::new('datepublished', 'Date Published')
             ->setFormat('dd-MM-yyyy')

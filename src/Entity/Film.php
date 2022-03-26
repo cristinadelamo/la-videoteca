@@ -54,6 +54,11 @@ class Film
      */
     private $directors;
 
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $imdbtitleid;
+
     public function __construct()
     {
         $this->actors = new ArrayCollection();
@@ -174,6 +179,18 @@ class Film
     public function removeDirector(Director $director): self
     {
         $this->directors->removeElement($director);
+
+        return $this;
+    }
+
+    public function getImdbtitleid(): ?string
+    {
+        return $this->imdbtitleid;
+    }
+
+    public function setImdbtitleid(string $imdbtitleid): self
+    {
+        $this->imdbtitleid = $imdbtitleid;
 
         return $this;
     }
