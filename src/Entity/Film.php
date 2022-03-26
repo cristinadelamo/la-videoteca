@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FilmRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,22 @@ class Film
      * @ORM\Column(type="string", length=255)
      */
     private $producer;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Actor::class, inversedBy="films")
+     */
+    private $actors;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Director::class, inversedBy="films")
+     */
+    private $directors;
+
+    public function __construct()
+    {
+        $this->actors = new ArrayCollection();
+        $this->directors = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +121,54 @@ class Film
     public function setProducer(string $producer): self
     {
         $this->producer = $producer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Actor>
+     */
+    public function getActors(): Collection
+    {
+        return $this->actors;
+    }
+
+    public function addActor(Actor $actor): self
+    {
+        if (!$this->actors->contains($actor)) {
+            $this->actors[] = $actor;
+        }
+
+        return $this;
+    }
+
+    public function removeActor(Actor $actor): self
+    {
+        $this->actors->removeElement($actor);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Director>
+     */
+    public function getDirectors(): Collection
+    {
+        return $this->directors;
+    }
+
+    public function addDirector(Director $director): self
+    {
+        if (!$this->directors->contains($director)) {
+            $this->directors[] = $director;
+        }
+
+        return $this;
+    }
+
+    public function removeDirector(Director $director): self
+    {
+        $this->directors->removeElement($director);
 
         return $this;
     }
