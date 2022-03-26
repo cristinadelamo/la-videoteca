@@ -1,0 +1,12 @@
+{% for films in field.value %}
+    {%- set url = ea_url()
+        .setController('App\\Controller\\Admin\\FilmCrudController')
+        .setAction('detail')
+        .setEntityId(films.id)
+    -%}
+    <a href="{{ url }}">
+        {{ films.title }}{% if not loop.last %}, {% endif %}
+    </a>
+{% else %}
+
+{% endfor %}

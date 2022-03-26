@@ -30,22 +30,8 @@ class FilmCrudController extends AbstractCrudController
         yield TextField::new('producer', 'Production Company')
             ->hideOnIndex();
         yield AssociationField::new('actors')
-            ->formatValue(function ($value, $entity) {
-                $str = $entity->getActors()[0];
-                for ($i = 1; $i < $entity->getActors()->count(); $i++) {
-                    $str = $str . ", " . $entity->getActors()[$i];
-                }
-                return $str;
-            });
+            ->setTemplatePath('admin/field/actors.html.twig');
         yield AssociationField::new('directors')
-            ->formatValue(function ($value, $entity) {
-                $str = $entity->getDirectors()[0];
-                for ($i = 1; $i < $entity->getDirectors()->count(); $i++) {
-                    $str = $str . ", " . $entity->getDirectors()[$i];
-                }
-                return $str;
-            });
+            ->setTemplatePath('admin/field/directors.html.twig');
     }
 }
-
-//TODO link de los actores y directores a sus propias entidades

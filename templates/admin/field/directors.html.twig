@@ -1,0 +1,12 @@
+{% for directors in field.value %}
+    {%- set url = ea_url()
+        .setController('App\\Controller\\Admin\\DirectorCrudController')
+        .setAction('detail')
+        .setEntityId(directors.id)
+    -%}
+    <a href="{{ url }}">
+        {{ directors.name }}{% if not loop.last %}, {% endif %}
+    </a>
+{% else %}
+
+{% endfor %}
