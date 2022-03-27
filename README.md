@@ -5,8 +5,12 @@ This is a movie manager created with Symfony 5.4 that provides a command to impo
 # Specifications
 
 Symfony 5.4
+
 PHP 7.4.28
+
 Composer
+
+EasyAdmin
 
 # Requests
 
