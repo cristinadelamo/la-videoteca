@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\Entity\Actor;
+use App\Entity\Director;
 use App\Entity\Film;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -94,8 +96,20 @@ class ImportCsvCommand extends Command
         $this->entityManager->persist($filmAdded);
     }
 
-    public function valuesNewFilm($film,$filmCsv)
+    public function valuesNewFilm($film, $filmCsv)
     {
+        $actors = explode(',', $filmCsv['actors']);
+        foreach ($actors as $actor) {
+            $newActor = new Actor();
+            $newActor->setName($actor);
+            $film->addActor($newActor);
+        }
+        $directors = explode(',', $filmCsv['director']);
+        foreach ($directors as $director) {
+            $newDirector = new Director();
+            $newDirector->setName($director);
+            $film->addDirector($newDirector);
+        }
         $film->setImdbtitleid($filmCsv['imdb_title_id'])
             ->setTitle($filmCsv['title'])
             ->setDatepublished(new \DateTimeImmutable($filmCsv['date_published']))

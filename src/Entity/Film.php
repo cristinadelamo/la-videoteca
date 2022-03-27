@@ -45,12 +45,12 @@ class Film
     private $producer;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Actor::class, inversedBy="films")
+     * @ORM\ManyToMany(targetEntity=Actor::class, inversedBy="films", cascade={"persist"})
      */
     private $actors;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Director::class, inversedBy="films")
+     * @ORM\ManyToMany(targetEntity=Director::class, inversedBy="films", cascade={"persist"})
      */
     private $directors;
 

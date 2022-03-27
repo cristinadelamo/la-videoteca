@@ -21,10 +21,13 @@ class DirectorCrudController extends AbstractCrudController
     {
         yield IdField::new('id')
             ->onlyOnIndex();
+
         yield TextField::new('name');
+
         yield AssociationField::new('films')
             ->setTemplatePath('admin/field/films.html.twig')
             ->setFormTypeOption('disabled', $pageName === Crud::PAGE_EDIT);
+
         yield DateField::new('datebirth', 'Date Birth')
             ->setFormat('dd-MM-yyyy')
             ->hideOnIndex();
