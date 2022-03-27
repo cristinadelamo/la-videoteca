@@ -7,6 +7,7 @@ use App\Entity\Director;
 use App\Entity\Film;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -27,7 +28,12 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Lavideoteca');
+            ->setTitle('La Videoteca');
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()->addCssFile('css/admin.css');
     }
 
     public function configureMenuItems(): iterable

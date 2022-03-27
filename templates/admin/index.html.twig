@@ -1,10 +1,39 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block main %}
-    <h1>Importador de películas</h1>
 
-    <p>Este es el comando para importar el archivo IMDb_movies.csv</p>
-    <p><code>symfony console app:import-csv</code></p>
-    <p>No tengas prisa mientras se importan. Tarda bastantes minutos.</p>
+{% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Primeros pasos</h1>
+                <p>Antes de entrar a ver peliculas, actores y directores tendrás que hacer lo siguiente:</p>
+                <h2>1. Establecer conexión con base de datos</h2>
+                <div class="codeblock codeblock-length-sm codeblock-terminal codeblock-bash">
+                    <div class="codeblock-code">
+                        <p><span class="hljs-prompt">$ </span>docker-compose up -d</p>
+                    </div>
+                </div>
+                <h2>2. Hacer las migraciones de las entidades</h2>
+                <p>Primero sacamos la lista de las migraciones que hay para comprobar que están pendientes de migrar y después las migramos.</p>
+                <div class="codeblock codeblock-length-sm codeblock-terminal codeblock-bash">
+                    <div class="codeblock-code">
+                        <p><span class="hljs-prompt">$ </span>symfony console doctrine:migrations:list</p>
+                        <p><span class="hljs-prompt">$ </span>symfony console doctrine:migrations:migrate</p>
+                    </div>
+                </div>
+                <h2>3. Importar la lista de películas</h2>
+                <p>Ahora ya sólo queda importar las péliculas del archivo csv.</p>
+                <p>En la carpeta uploads de public hay varios csvs de distintos tamaños. Elige el que quieres cargar.</p>
+                <div class="codeblock codeblock-length-sm codeblock-terminal codeblock-bash">
+                    <div class="codeblock-code">
+                        <p><span class="hljs-comment"># tienes que poner en lugar de {name_file} el nombre del archivo</span></p>
+                        <p><span class="hljs-prompt">$ </span>symfony console app:import-csv {name_file}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 {% endblock %}

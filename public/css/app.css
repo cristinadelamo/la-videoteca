@@ -2,6 +2,9 @@ body {
     font-family: spartan, sans-serif;
     color: #444;
 }
+.container.home{
+    margin-top:50px;
+}
 footer {
     background-color: #efefee;
 }
