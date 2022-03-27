@@ -10,7 +10,7 @@ PHP 7.4.28
 
 Composer
 
-EasyAdmin
+EasyAdmin 4
 
 # Requests
 
