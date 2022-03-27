@@ -31,7 +31,7 @@ class ImportCsvCommand extends Command
     protected function configure()
     {
         $this->setDescription('Update database films')
-        ->addArgument('file_name', InputArgument::REQUIRED, 'Name of the file to import. It has to be a csv extension. It has to be placed at uploads folder');
+            ->addArgument('file_name', InputArgument::REQUIRED, 'Name of the file to import. It has to be a csv extension. It has to be placed at uploads folder');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,10 +39,11 @@ class ImportCsvCommand extends Command
         $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
 
         $io = new SymfonyStyle($input, $output);
-        $this->entityManager->clear();
 
+        //the name of the file csv to import
         $csvFile = $input->getArgument('file_name');
 
+        //convert the csv file into an array (keys are in the first file of the csv)
         $filmsCsv = $this->getCsvRowsAsArrays($csvFile);
 
         $filmRepository = $this->entityManager->getRepository(Film::class);
@@ -54,7 +55,7 @@ class ImportCsvCommand extends Command
 
             $batchSize = 20;
 
-            //if film exists continue
+            //check if the film is in the database. If so, continue
             if ($filmRepository->findOneBy(['imdbtitleid' => $filmCsv['imdb_title_id']])) {
 
                 $existingCount++;
@@ -65,16 +66,18 @@ class ImportCsvCommand extends Command
 
             $film = new Film();
 
+            //get the film with all the new values
             $filmAdded = $this->valuesNewFilm($film, $filmCsv);
 
             $this->entityManager->persist($filmAdded);
 
             if (($newCount % $batchSize) === 0 && $newCount > 0) {
+
                 $this->entityManager->flush();
                 $this->entityManager->clear();
 
-                $io->writeln('It\'s almost done. '.$newCount.' items have been added, for now');
-                
+                $io->writeln('It\'s almost done. ' . $newCount . ' items have been added, for now');
+
             }
 
             $newCount++;
@@ -92,7 +95,7 @@ class ImportCsvCommand extends Command
 
     public function getCsvRowsAsArrays($csvfile)
     {
-        $inputFile = $this->projectDir . '/public/uploads/'.$csvfile.'.csv';
+        $inputFile = $this->projectDir . '/public/uploads/' . $csvfile . '.csv';
 
         $decoder = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
 
@@ -101,18 +104,52 @@ class ImportCsvCommand extends Command
 
     public function valuesNewFilm($film, $filmCsv)
     {
+        //adding actors to the film array
+
         $actors = explode(',', $filmCsv['actors']);
+
         foreach ($actors as $actor) {
-            $newActor = new Actor();
-            $newActor->setName($actor);
-            $film->addActor($newActor);
+            $actorRepository = $this->entityManager->getRepository(Actor::class);
+
+            //if director exists update the film
+
+            if ($actorRepository->findOneBy(['name' => $actor])) {
+
+                $actorRepository->findOneBy(['name' => $actor])->addFilm($film);
+
+            } else {
+
+                $newActor = new Actor();
+                $newActor->setName($actor);
+                $film->addActor($newActor);
+
+            }
         }
+
+        //adding directors to the film array
+
         $directors = explode(',', $filmCsv['director']);
+
         foreach ($directors as $director) {
-            $newDirector = new Director();
-            $newDirector->setName($director);
-            $film->addDirector($newDirector);
+            $directorRepository = $this->entityManager->getRepository(Director::class);
+
+            //if director exists update the film
+
+            if ($directorRepository->findOneBy(['name' => $director])) {
+
+                $directorRepository->findOneBy(['name' => $director])->addFilm($film);
+
+            } else {
+
+                $newDirector = new Director();
+                $newDirector->setName($director);
+                $film->addDirector($newDirector);
+
+            }
         }
+
+        //finally adding the rest of the fields to
+
         $film->setImdbtitleid($filmCsv['imdb_title_id'])
             ->setTitle($filmCsv['title'])
             ->setDatepublished(new \DateTimeImmutable($filmCsv['date_published']))
